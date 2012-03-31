@@ -5,6 +5,18 @@ Javaで文字列ベースのテストを行うモジュール
 リフレクションを利用して特定のパッケージの下にあるクラスを取得し
 そのクラスのテストメソッドを自動的に呼び出します。
 
+ファイルについて
+cloverrose直下に２つのディレクトリsampleとtestframeworkがあります。
+sample以下のファイルはデモ用に作ったものです。
+testframework以下のファイルがコアです。
+
+TestFramework.javaがメインのクラス
+ReflectionHelper.javaはTestFrameworkクラス内で
+必要になるリフレクションを委譲したクラスです
+Tester.javaは継承して実際にテストを記述するクラスです
+
+
+使い方
 テストの追加と一時中止にかかるコストを極力減らすために、
 新しいテストクラスを追加した時に必要な記述はテスト本体である
 makeInputString(),makeOututString(),mainWork()以外は
@@ -15,6 +27,6 @@ cloverrose.sample.testframework.concrete.FiveTester.javaを見てください。
 テストメソッドを呼び出すだけです。
 cloverrose.sample.testframework.Main.javaを見てください。
 
-使い方
+ライブラリとしての使い方
 自分はEclipseでJarファイルを作って他のプロジェクトのBuildPathに追加して
 使ってます。

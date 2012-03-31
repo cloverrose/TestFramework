@@ -17,7 +17,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
-public class ReflectionHelper {
+class ReflectionHelper {
 	/**
 	 * cloverrose.sample.testframework.concrete と FiveTester.class　から
 	 * cloverrose.sample.testframework.concrete.FiveTesterを生成

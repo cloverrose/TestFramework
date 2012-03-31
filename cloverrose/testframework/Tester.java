@@ -39,7 +39,7 @@ public abstract class Tester {
 	 * 
 	 * @return
 	 */
-	public boolean test(){
+	boolean test(){
 		String output=mainWork(this.makeInputString());
 		if(!makeOutputString().equals(output)){//テストで誤りを検出
 		    //テストするpackageが一つならパッケージパスまで表示する必要はないので、SimpleNameでよい
