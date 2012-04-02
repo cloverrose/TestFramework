@@ -19,13 +19,6 @@ public abstract class Tester {
 	 */
     protected abstract String mainWork(String input);
 
-    /**
-	 * 具象クラスのインスタンスを返す
-	 * 例　return new FiveTester();
-	 * @return
-	 */
-	protected abstract Tester makeInstance();
-	
 	/**
 	 * 
 	 * @return

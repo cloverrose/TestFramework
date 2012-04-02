@@ -23,8 +23,4 @@ public class FiveTester extends Tester{
         System.out.println("call");
         return ""+count;
     }
-    @Override
-    protected Tester makeInstance() {
-       return new FiveTester();
-    }
 }
