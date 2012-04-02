@@ -20,6 +20,7 @@ public class FiveTester extends Tester{
 	@Override
 	protected String mainWork(String input) {
         int count=input.length();
+        System.out.println("call");
         return ""+count;
     }
     @Override

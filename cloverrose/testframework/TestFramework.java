@@ -32,7 +32,7 @@ public class TestFramework {
 	public List<String> getMessages(){return this.messages;}
 	
 	//Reflectionを使って呼び出すメソッドの名前
-	private final static String methodName="init";
+	private final static String methodName="makeInstance";
 	//Reflection関係のことを行う移譲クラス
 	private ReflectionHelper helper=new ReflectionHelper(); 
 	

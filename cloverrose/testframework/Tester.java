@@ -27,19 +27,10 @@ public abstract class Tester {
 	protected abstract Tester makeInstance();
 	
 	/**
-	 * TestFrameworkのtestersに具象クラスのインスタンスを追加する
-	 * リフレクションでメソッドを見つけるのでpublicにする必要がある
-	 */
-	public void init(){
-	    Tester tester=this.makeInstance();
-	    TestFramework.getInstance().addTester(tester);   
-	}
-	
-	/**
 	 * 
 	 * @return
 	 */
-	boolean test(){
+	final boolean test(){
 		String output=mainWork(this.makeInputString());
 		if(!makeOutputString().equals(output)){//テストで誤りを検出
 		    //テストするpackageが一つならパッケージパスまで表示する必要はないので、SimpleNameでよい
