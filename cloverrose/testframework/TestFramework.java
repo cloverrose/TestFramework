@@ -1,4 +1,5 @@
 package cloverrose.testframework;
+import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 public class TestFramework {
@@ -14,9 +15,12 @@ public class TestFramework {
 	}
     /*------------------------------------------------------------------*/
 	
+	//Javaの*.classファイルが置かれているルートディレクトリへの相対パス
+	String binDir;
 	// テスト用のJavaファイルが定義されているパッケージ
 	List<String> packagePaths;
-	public void setPackagePaths(List<String> packagePaths){
+	public void set_binDir_packagePaths(String binDir,List<String> packagePaths){
+		this.binDir=binDir;
 		this.packagePaths=packagePaths;
 	}
 	
@@ -38,8 +42,9 @@ public class TestFramework {
 		this.testers.add(t);
 	}
 	
+	//---------------------------LOGIC PART---------------------------------//
 	/**
-	 * Reflectionを使って、packagePathsに含まれているクラスを集め、
+	 * packagePathsに含まれているクラスを集め、
 	 * そのクラスのinitメソッドを呼び出して、
 	 * testersを初期化
 	 * @throws Exception
@@ -47,13 +52,64 @@ public class TestFramework {
 	private void call_init_methods() throws Exception{
 		List<String> classNames=new ArrayList<String>();
 		for(String packagePath : packagePaths){
-			classNames.addAll(helper.getClassNamesInPackage(packagePath));//packagePath直下（非再帰）のクラスの名前をすべて集める
+			classNames.addAll(getClassNamesInPackage(packagePath));//packagePath直下（非再帰）のクラスの名前をすべて集める
 		}
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		for(String className : classNames){
 			helper.callMethod(loader, className, methodName);//initメソッドを呼び出す
 		}
 	}
+	/**
+	 *  '.'で区切られてるパッケージパスをシステム依存のファイル区切り文字File.separatorに変更
+	 *  WindowsではFile.separatorが'\'なので、replaceAllの第２引数にするとエラーが出てしまうので条件分岐している
+	 * @param packagePath
+	 * @return
+	 */
+	private String replaceSeparator(String packagePath){
+		String sep=File.separator;
+		if(sep.equals("\\")){
+			return packagePath.replaceAll("\\.",File.separator+File.separator);
+		}else{
+			return packagePath.replaceAll("\\.",File.separator);
+		}
+	}
+	/**
+	 * binDirをルートとしたファイルシステムにおいてpackagePath直下にある
+	 * *.classファイルのファイル名（パスを含まない）を集めて返す
+	 * その際、拡張子である".class"は削除する
+	 * @param packagePath
+	 * @return
+	 */
+	private List<String> getClassFileNames(String packagePath){
+		String replaceSeparator=replaceSeparator(packagePath);
+		//パッケージの相対パスを作成
+		File packageDirectory=new File(binDir+File.separator+replaceSeparator);
+		
+		//パッケージの下にあるファイルを全て取得
+		File[] fs=packageDirectory.listFiles();
+		List<String> ret=new ArrayList<String>();
+		for(File f : fs){
+			String name=f.getName();
+			if(name.endsWith(".class")){
+				String removeClass=name.replaceAll("\\.class$", "");
+				ret.add(removeClass);
+			}
+		}
+		return ret;
+	}
+	/**
+	 * packageNameに含まれるクラス名を集める（packageNameの下のパッケージまでは調べない　非再帰）
+	 * cloverrose.sample.testframework.concrete.FiveTesterを生成
+	 */
+	private List<String> getClassNamesInPackage(String packagePath){
+		List<String> ret=new ArrayList<String>();
+		for(String name : getClassFileNames(packagePath)){
+			String classPath=packagePath+"."+name;
+			ret.add(classPath);
+		}
+		return ret;
+	}
+	
 	/**
 	 * すべてのテストが真ならtrueを返す
 	 * @return

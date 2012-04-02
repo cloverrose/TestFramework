@@ -2,8 +2,17 @@ TestFramework
 
 概要
 Javaで文字列ベースのテストを行うモジュール
-リフレクションを利用して特定のパッケージの下にあるクラスを取得し
-そのクラスのテストメソッドを自動的に呼び出します。
+指定されたパッケージの下にある*.classファイルを取得し
+リフレクションを利用して、そのクラスのテストメソッドを自動的に呼び出します。
+
+変更履歴
+2012-04-02
+OS依存度が高かったパッケージ下のクラスファイル名の取得を大幅に変更し、OS非依存にした
+その結果、クラスファイル名の取得がリフレクションを利用しなくなったため、
+一連のメソッド群をReflectionHelperからTestFrameworkに移動
+また、結果としてクラスパスにtool.jarを追加する必要がなくなった
+
+
 
 ファイルについて
 cloverrose直下に２つのディレクトリsampleとtestframeworkがあります。
@@ -26,18 +35,9 @@ cloverrose.sample.testframework.concrete.FiveTester.javaを見てください。
 テストメソッドを呼び出すだけです。
 cloverrose.sample.testframework.Main.javaを見てください。
 
-注意点
-リフレクションを使っているためクラスパスに
-tools.jarを追加しなければいけません。マシンによって違うとは思いますが、
-java/jdk_version/lib/tools.jarなどにあると思います。
-自分はEclipseを使用しているのでrun configrations...をクリックして
-class pathに設定してます。setting-tools.jar.pngを参照
-
-
 ライブラリとしての使い方
 自分はEclipseでtestframework.jarというようにJarファイルを作って
 他のプロジェクトのBuildPathに追加して使ってます。
-ここで、他のプロジェクトのクラスパスにもtools.jarを設定するのを忘れないで下さい。
 
 効率的なテストの作成
 同じ処理に入力を変更していくつかテストしたい時は

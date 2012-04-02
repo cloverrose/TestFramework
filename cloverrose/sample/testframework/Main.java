@@ -8,6 +8,8 @@ import cloverrose.testframework.TestFramework;
 public class Main {
 	public static void main(String[] args) {
 
+		//*.classファイルが入っているルートディレクトリの相対パス
+		String binDir="bin";
 	    //テストクラスが入っているパッケージを設定
         List<String> ps=new ArrayList<String>(){
         private static final long serialVersionUID = 1L;
@@ -15,7 +17,7 @@ public class Main {
               add("cloverrose.sample.testframework.concrete");    
           }
         };
-		TestFramework.getInstance().setPackagePaths(ps);
+		TestFramework.getInstance().set_binDir_packagePaths(binDir,ps);
 
 		//テストを開始　結果はtrueになるはず
 		boolean ret=TestFramework.getInstance().test();
