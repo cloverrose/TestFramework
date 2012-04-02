@@ -1,7 +1,7 @@
 package cloverrose.testframework;
 
 public abstract class Tester {
-    /**
+	/**
      * mainWorkに渡す文字列を設定
      * @return
      */
@@ -33,11 +33,8 @@ public abstract class Tester {
 	final boolean test(){
 		String output=mainWork(this.makeInputString());
 		if(!makeOutputString().equals(output)){//テストで誤りを検出
-		    //テストするpackageが一つならパッケージパスまで表示する必要はないので、SimpleNameでよい
-			String cn=(TestFramework.getInstance().packagePaths.size()<=1)?this.getClass().getSimpleName():this.getClass().getName();
-			
-			//誤りを検出テストクラスの名前をTestFrameworkのmessagesに追加する
-	     	TestFramework.getInstance().addMessage("found mismatch at class "+cn);
+			String cn=this.getClass().getName();
+			System.err.println("[cloverrose.testframework] found mismatch at class ["+cn+"]");
 	     	return false;
 	    }
 		return true;

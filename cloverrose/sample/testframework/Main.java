@@ -17,10 +17,11 @@ public class Main {
               add("cloverrose.sample.testframework.concrete");    
           }
         };
-		TestFramework.getInstance().set_binDir_packagePaths(binDir,ps);
+		TestFramework testFm=new TestFramework();
+		testFm.set_binDir_packagePaths(binDir,ps);
 
 		//テストを開始　結果はtrueになるはず
-		boolean ret=TestFramework.getInstance().test();
+		boolean ret=testFm.test();
 		System.out.println(ret);
 	}
 

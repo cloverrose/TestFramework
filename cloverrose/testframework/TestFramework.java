@@ -1,46 +1,27 @@
 package cloverrose.testframework;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.ArrayList;
 public class TestFramework {
-	/*------------------------------------------------------------------*/
-	/*singleton                                                         */
-	/*------------------------------------------------------------------*/
-	private static TestFramework singleton=new TestFramework();
-	private TestFramework(){
+	public TestFramework(){
 		this.testers=new ArrayList<Tester>();
 	}
-	public static TestFramework getInstance(){
-		return singleton;
-	}
-    /*------------------------------------------------------------------*/
 	
 	//Javaの*.classファイルが置かれているルートディレクトリへの相対パス
-	String binDir;
-	// テスト用のJavaファイルが定義されているパッケージ
-	List<String> packagePaths;
+	//テスト用のJavaファイルが定義されているパッケージ
+	private String binDir;
+	private List<String> packagePaths;
 	public void set_binDir_packagePaths(String binDir,List<String> packagePaths){
 		this.binDir=binDir;
 		this.packagePaths=packagePaths;
 	}
-	
-	//テスト用の出力が標準出力に出ると結果が見づらいのでここにしまう
-	private List<String> messages=new ArrayList<String>();
-	void addMessage(String msg){
-		this.messages.add(msg);
-	}
-	public List<String> getMessages(){return this.messages;}
-	
-	//Reflectionを使って呼び出すメソッドの名前
+	//Reflectionを使って呼び出すメソッドの名前[固定]
 	private final static String methodName="makeInstance";
-	//Reflection関係のことを行う移譲クラス
-	private ReflectionHelper helper=new ReflectionHelper(); 
 	
 	//テストを行うインスタンス
 	private List<Tester> testers;
-	void addTester(Tester t){
-		this.testers.add(t);
-	}
 	
 	//---------------------------LOGIC PART---------------------------------//
 	/**
@@ -56,7 +37,7 @@ public class TestFramework {
 		}
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		for(String className : classNames){
-			helper.callMethod(loader, className, methodName);//initメソッドを呼び出す
+			callMethod(loader, className, methodName);//initメソッドを呼び出す
 		}
 	}
 	/**
@@ -121,5 +102,16 @@ public class TestFramework {
 			flg&=t.test();
 		}
 		return flg;
+	}
+	
+	//-----------リフレクション
+	private void callMethod(ClassLoader loader,String className,String methodName) 
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException{
+		Class<?> clazz = loader.loadClass(className);//クラス名がclassNameのクラスをロード
+		Object instance=clazz.newInstance();//クラスからインスタンスを生成
+		Method method=clazz.getDeclaredMethod(methodName);//クラスからメソッド名がmethodNameで引数が無いメソッドを取得
+		method.setAccessible(true);
+		Tester testInstance=(Tester)method.invoke(instance);//instanceのメソッドを引数なしで実行
+		this.testers.add(testInstance);
 	}
 }
